@@ -17,6 +17,7 @@
 package org.thoughtcrime.securesms.conversation;
 
 import android.Manifest;
+import static org.webrtc.ContextUtils.getApplicationContext;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
@@ -69,6 +70,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.signal.core.util.StreamUtil;
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
+import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.ApplicationPreferencesActivity;
 import org.thoughtcrime.securesms.LoggingFragment;
 import org.thoughtcrime.securesms.PassphraseRequiredActivity;
@@ -167,6 +169,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import org.thoughtcrime.securesms.conversation.CountCharactersWords;
 
 @SuppressLint("StaticFieldLeak")
 public class ConversationFragment extends LoggingFragment {
@@ -1716,6 +1719,7 @@ public class ConversationFragment extends LoggingFragment {
     public boolean onMenuItemClick(MenuItem item) {
       switch (item.getItemId()) {
         case R.id.action_info:        handleDisplayDetails(conversationMessage);                                            return true;
+        case R.id.action_counter:     handleCounterMessages(SetUtil.newHashSet(conversationMessage));                       return true;
         case R.id.action_delete:      handleDeleteMessages(SetUtil.newHashSet(conversationMessage));                        return true;
         case R.id.action_copy:        handleCopyMessage(SetUtil.newHashSet(conversationMessage));                           return true;
         case R.id.action_reply:       handleReplyMessage(conversationMessage);                                              return true;
@@ -1724,6 +1728,33 @@ public class ConversationFragment extends LoggingFragment {
         case R.id.action_download:    handleSaveAttachment((MediaMmsMessageRecord) conversationMessage.getMessageRecord()); return true;
         default:                                                                                                            return false;
       }
+    }
+
+    private void handleCounterMessages(final Set<ConversationMessage> conversationMessages) {
+      Set<MessageRecord> messageRecordsNotes = Stream.of(conversationMessages).map(ConversationMessage::getMessageRecord).collect(Collectors.toSet());
+      buildRemoteNotesConfirmationDialog(messageRecordsNotes).show();
+    }
+
+    private AlertDialog.Builder buildRemoteNotesConfirmationDialog(Set<MessageRecord> messageRecords) {
+      Context             context       = requireActivity();
+      int                 messagesCount = messageRecords.size();
+      AlertDialog.Builder builder       = new AlertDialog.Builder(getActivity());
+
+      builder.setTitle(getActivity().getResources().getQuantityString(R.plurals.ConversationFragment_count_words_and_characters_selected_messages, messagesCount, messagesCount));
+      builder.setCancelable(true);
+      CountCharactersWords countMessageWords = new CountCharactersWords();
+      builder.setPositiveButton(R.string.ConversationFragment_count_words_and_characters_selected_messages, (dialog, which) -> {
+        for (MessageRecord messageRecord : messageRecords) {
+          Context con = getApplicationContext();
+          int duration = 1000;
+          StringBuffer c = new StringBuffer(messageRecord.getBody().toString());
+          Toast toast = Toast.makeText(con, CountCharactersWords.Counter(String.valueOf(c)), duration);
+          toast.show();
+        }
+      });
+
+      builder.setNegativeButton(android.R.string.cancel, null);
+      return builder;
     }
   }
 

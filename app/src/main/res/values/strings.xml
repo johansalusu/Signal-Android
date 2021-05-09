@@ -293,6 +293,10 @@
         <item quantity="one">Delete selected message?</item>
         <item quantity="other">Delete selected messages?</item>
     </plurals>
+    <plurals name="ConversationFragment_count_words_and_characters_selected_messages">
+        <item quantity="one">Count selected message?</item>
+        <item quantity="other">Count selected messages?</item>
+    </plurals>
     <string name="ConversationFragment_save_to_sd_card">Save to storage?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?</item>
@@ -318,6 +322,7 @@
     <string name="ConversationFragment_deleting">Deleting</string>
     <string name="ConversationFragment_deleting_messages">Deleting messages…</string>
     <string name="ConversationFragment_delete_for_me">Delete for me</string>
+    <string name="ConversationFragment_count_words_and_characters_selected_messages">Yes</string>
     <string name="ConversationFragment_delete_for_everyone">Delete for everyone</string>
     <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">This message will be deleted for everyone in the conversation if they’re on a recent version of Signal. They will be able to see that you deleted a message.</string>
     <string name="ConversationFragment_quoted_message_not_found">Original message not found</string>
@@ -2589,6 +2594,7 @@
 
     <!-- conversation_context -->
     <string name="conversation_context__menu_message_details">Message details</string>
+    <string name="conversation_context__menu_counter_messages">Count characters and words</string>
     <string name="conversation_context__menu_copy_text">Copy text</string>
     <string name="conversation_context__menu_delete_message">Delete message</string>
     <string name="conversation_context__menu_forward_message">Forward message</string>
